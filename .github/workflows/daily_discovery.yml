@@ -2,44 +2,48 @@ name: TrendLab Daily Discovery
 
 on:
   schedule:
-    # Runs at 02:30 UTC (08:00 AM IST) every day
     - cron: '30 2 * * *'
-  workflow_dispatch: # Allows you to run it manually for testing
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  scout_and_post:
+  scout_and_sync:
     runs-on: ubuntu-latest
-    environment: production # This triggers the "Manual Approval" gate
+    environment: production 
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
-          python -m playwright install chromium
+          # We keep Playwright only if tracker.py uses it for scraping
+          # python -m playwright install --with-deps chromium
 
-      - name: Reconstruct Environment
+      - name: Reconstruct Configs
         run: |
-          # Create .env for API keys
-          echo "GEMINI_KEY=${{ secrets.GEMINI_KEY }}" > .env
-          echo "TAVILY_KEY=${{ secrets.TAVILY_KEY }}" >> .env
-          
-          # Create Safety Policy
           echo '${{ secrets.SAFETY_POLICY_JSON }}' > safety_policy.json
           
-          # Create Session Cookies
-          echo '${{ secrets.LI_COOKIES }}' > linkedin_cookies.json
-          echo '${{ secrets.TW_COOKIES }}' > twitter_cookies.json
-
       - name: Run Trend Scout
+        env:
+          GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
+          TAVILY_KEY: ${{ secrets.TAVILY_KEY }}
+          GEMINI_MODEL: "models/gemini-1.5-flash"
         run: python tracker.py
 
-      - name: Organic Social Post
-        run: python post_social.py
+      - name: Sync Intelligence Data
+        run: |
+          git config --global user.name "TrendLab-Bot"
+          git config --global user.email "bot@trendlab.ai"
+          # Only add the data folder/file
+          git add data/trends.csv
+          # This line checks if there are actual changes to prevent "Empty Commit" errors
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Intelligence Update: $(date +'%Y-%m-%d')" && git push)
