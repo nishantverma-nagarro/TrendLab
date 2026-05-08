@@ -1,0 +1,28 @@
+{
+    "search_settings": {
+        "target_sites": [
+            "reddit.com",
+            "twitter.com",
+            "github.com",
+            "arxiv.org",
+            "medium.com"
+        ],
+        "max_results_per_domain": 5
+    },
+    "llm_settings": {
+        "fallback_models": [
+            "gemini-flash-latest",
+            "gemini-3-flash-preview",
+            "gemini-2.5-flash",
+            "gemini-2.5-pro",
+            "gemini-pro-latest"
+        ]
+    },
+    "research_targets": {
+        "Software Engineering": "architecture OR repo OR benchmark",
+        "Cybersecurity": "exploit OR PoC OR 'zero-day'",
+        "Maritime AI": "GIS OR sensor OR vessel",
+        "Deep Space Tech": "orbital OR propulsion OR telemetry",
+        "BioTech": "CRISPR OR sequencing OR 'clinical trial'"
+    }
+}
