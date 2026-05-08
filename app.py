@@ -105,7 +105,7 @@ else:
                 signal_line = "  •  ".join([f"`{kw.upper()}`" for kw in row['keywords']])
                 st.markdown(f"**Signals:** {signal_line}")
             with c2:
-                st.metric("Trend Hype", f"{row['hype_score']}/10")
+                st.metric("Trend Hype", f"{hype_icon} {row['hype_score']}/10")
                 st.markdown(f"**Sentiment:** {dot} :{color}[{sentiment}]")
                 st.markdown(f"🔗 [Source Material]({row['link']})")
 
