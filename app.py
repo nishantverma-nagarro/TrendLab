@@ -24,10 +24,31 @@ st.title("🛡️ TrendLab: Defense & Tech Intelligence")
 # --- METHODOLOGY EXPANDER ---
 with st.expander("ℹ️ Understanding Intelligence Scores & Methodology"):
     st.markdown("""
-    ### 📊 Intelligence Framework
-    * **Global Tech Hype (Baseline):** The control signal representing average market innovation.
-    * **The Delta (±):** Variance between Sector and Global Baseline.
-    * **Alpha Zone:** Low Hype + Bullish sentiment (Early opportunity).
+    ### 🧠 Methodology & Metric Definitions
+    TrendLab utilizes a **Natural Language Inference (NLI)** scoring system to quantify qualitative industry data.
+    
+    #### 📈 The Hype Scale (0-100)
+    The **Hype Score** measures the intensity of discussion, investment, and developer activity.
+    * **Global Tech Hype (Baseline):** The current average innovation "noise" across all tracked sectors.
+    * **Sector Hype (e.g., Software Engineering):** The specific momentum of that niche.
+    * **Is High Good?** * **High Hype (>75):** Indicates a "Hot" market. Good for visibility, but carries high competition and potential "Bubble" risk.
+        * **Low Hype (<30):** Indicates "Quiet" innovation. This is often where high-value, overlooked R&D happens.
+
+    #### ⚖️ The Delta (±)
+    The **Delta** is the difference between the Sector and the Global Baseline.
+    * **Positive Delta:** The sector is outperforming the market (Leading).
+    * **Negative Delta:** The sector is cooling down or maturing (Lagging).
+
+    #### 🎭 Sentiment Indicators
+    We categorize the "Tone" of technical discourse into three levels:
+    * **🟢 Bullish (Strong Growth):** High confidence, positive breakthrough news, and massive adoption signals. High probability of near-term ROI.
+    * **🟡 Neutral (Steady/Stable):** Incremental improvements, maintenance-mode discussions, or balanced pros/cons. Low volatility.
+    * **🔴 Bearish (Caution/Pivot):** Negative security reports, funding cuts, or technological dead-ends. Signals a need to pivot or wait.
+
+    #### 🎯 Strategic Zones
+    * **The Alpha Zone:** (Low Hype + Bullish Sentiment). This is the **"Smart Money"** zone where trends are scientifically sound but haven't been picked up by mainstream media yet.
+    * **The Peak Zone:** (High Hype + Bullish Sentiment). Validated success, but high entry cost.
+    * **The Warning Zone:** (High Hype + Bearish Sentiment). High noise covering up fundamental flaws or declining interest.
     """)
 
 if df.empty:
@@ -90,9 +111,9 @@ else:
     
     # Use iloc[::-1] to reverse for newest-first display
     for _, row in domain_data.iloc[::-1].iterrows():
-        hype_icon = "🔥" if row['hype_score'] >= 7.5 else "🧊"
+        hype_icon = "🔥" if row['hype_score'] >= 7.5 else "❄️"
         sentiment = row['sentiment']
-        color, dot = ("green", "🟢") if sentiment == "Bullish" else ("red", "🔴") if sentiment == "Bearish" else ("gray", "⚪")
+        color, dot = ("green", "🟢") if sentiment == "Bullish" else ("red", "🔴") if sentiment == "Bearish" else ("orange", "🟡")
 
         title_string = f"**{hype_icon} {dot} | {row['topic']}**"
         
