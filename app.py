@@ -27,12 +27,12 @@ with st.expander("ℹ️ Understanding Intelligence Scores & Methodology"):
     ### 🧠 Methodology & Metric Definitions
     TrendLab utilizes a **Natural Language Inference (NLI)** scoring system to quantify qualitative industry data.
     
-    #### 📈 The Hype Scale (0-100)
+    #### 📈 The Hype Scale (0-10)
     The **Hype Score** measures the intensity of discussion, investment, and developer activity.
     * **Global Tech Hype (Baseline):** The current average innovation "noise" across all tracked sectors.
     * **Sector Hype (e.g., Software Engineering):** The specific momentum of that niche.
-    * **Is High Good?** * **High Hype (>75):** Indicates a "Hot" market. Good for visibility, but carries high competition and potential "Bubble" risk.
-        * **Low Hype (<30):** Indicates "Quiet" innovation. This is often where high-value, overlooked R&D happens.
+    * **Is High Good?** * **High Hype (>7.5):** Indicates a "Hot" market. Good for visibility, but carries high competition and potential "Bubble" risk.
+        * **Low Hype (<3.0):** Indicates "Quiet" innovation. This is often where high-value, overlooked R&D happens.
 
     #### ⚖️ The Delta (±)
     The **Delta** is the difference between the Sector and the Global Baseline.
