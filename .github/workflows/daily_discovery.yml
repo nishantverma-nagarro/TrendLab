@@ -41,9 +41,11 @@ jobs:
 
       - name: Sync Intelligence Data
         run: |
-          git config --global user.name "TrendLab-Bot"
-          git config --global user.email "bot@trendlab.ai"
-          # Only add the data folder/file
-          git add data/trends.csv
+          git config --global user.name "Nishant Kumar Verma"
+          git config --global user.email "nkverma88015@gmail.com"
+          
+          # Use -f to force add the file even if it is in .gitignore
+          git add -f data/trends.csv
+
           # This line checks if there are actual changes to prevent "Empty Commit" errors
           git diff --quiet && git diff --staged --quiet || (git commit -m "Intelligence Update: $(date +'%Y-%m-%d')" && git push)
