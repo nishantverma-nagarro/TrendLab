@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 from google import genai
 
 load_dotenv()
+if not os.path.exists('data'):
+    os.makedirs('data')
 client = genai.Client(api_key=os.getenv("GEMINI_KEY"))
 TAVILY_API_KEY = os.getenv("TAVILY_KEY")
 MODEL_ID = os.getenv("GEMINI_MODEL", "models/gemini-3-flash") # Using Flash for speed/quota

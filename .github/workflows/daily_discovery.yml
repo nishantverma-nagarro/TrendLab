@@ -36,7 +36,7 @@ jobs:
         env:
           GEMINI_KEY: ${{ secrets.GEMINI_KEY }}
           TAVILY_KEY: ${{ secrets.TAVILY_KEY }}
-          GEMINI_MODEL: "models/gemini-1.5-flash"
+          GEMINI_MODEL: "models/gemini-flash-latest"
         run: python tracker.py
 
       - name: Sync Intelligence Data
