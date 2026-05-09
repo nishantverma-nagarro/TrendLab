@@ -14,21 +14,39 @@ The pipeline is architected for **high availability and zero operational cost**,
 
 ```mermaid
 graph TD
-    subgraph "1. Ingestion & Search"
-        A[GitHub Action] --> B[Targeted Scout]
-        B --> C[[Tavily Search API]]
+    %% Global Styles
+    %% Using a sleek, neutral palette: Deep Blue, Slate, and Ghost White
+    classDef default fill:#f9f9fb,stroke:#2c3e50,stroke-width:1.5px,color:#2c3e50,font-family:Inter,Arial;
+    classDef subgraphStyle fill:#ffffff,stroke:#bdc3c7,stroke-width:1px,stroke-dasharray: 5 5,color:#7f8c8d,font-size:13px;
+    classDef highlight fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px,color:#1a73e8,font-weight:bold;
+    classDef storage fill:#f1f3f4,stroke:#5f6368,stroke-width:2px;
+
+    %% --- 1. DATA INGESTION ---
+    subgraph Ingestion ["1. INGESTION & SEARCH"]
+        A[GitHub Action] --- B[Targeted Scout]
+        B --- C(Tavily Search API)
     end
 
-    subgraph "2. Intelligence & Safety"
+    %% --- 2. INTELLIGENCE ---
+    subgraph Intel ["2. INTELLIGENCE & SAFETY"]
         C --> D{Model Switcher}
-        D -->|NLI Scoring| E[Inference Tier: Gemini Flash/Pro]
-        E --> F[Content Safety Filter]
+        D -- "NLI Logic" --> E
+        E[Inference Tier: Gemini Flash/Pro] --> F[Content Safety Filter]
     end
 
-    subgraph "3. Deployment"
+    %% --- 3. DEPLOYMENT ---
+    subgraph Deployment ["3. DEPLOYMENT"]
         F --> G[(trends.csv)]
         G --> H[Streamlit Dashboard]
     end
+
+    %% Apply Classes
+    class Ingestion,Intel,Deployment subgraphStyle;
+    class C,E highlight;
+    class G storage;
+
+    %% Flow Customization
+    linkStyle default stroke:#34495e,stroke-width:1.5px;
 ```
 
 ### 🛠️ Key Technical Features
