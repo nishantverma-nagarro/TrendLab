@@ -2,7 +2,7 @@
 > **A high-signal, zero-maintenance NLI pipeline for tracking technical breakthroughs across configurable domains with enterprise-grade safety gates.**
 
 [![Live Dashboard](https://img.shields.io/badge/View-Live_Dashboard-FF4B4B?style=for-the-badge&logo=streamlit)](https://trendlab-intel.streamlit.app/)
-[![LinkedIn](https://img.shields.io/badge/Connect-LinkedIn-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/nishant-verma-88915998/)
+[![LinkedIn](https://img.shields.io/badge/Connect-LinkedIn-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/nishant-verma-88915998/)
 
 ## 📖 Overview
 TrendLab is an automated intelligence asset designed to solve the "Noise-to-Signal" problem in rapidly evolving tech sectors. It scouts high-value domains (ArXiv, GitHub, Reddit), analyzes data via Natural Language Inference (NLI), and presents objective intelligence scores—all while maintaining a strict governance layer to ensure content professionality and corporate compliance.
