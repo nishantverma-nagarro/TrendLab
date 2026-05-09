@@ -1,0 +1,15 @@
+name: 6-Hour Site Ping
+
+on:
+  schedule:
+    # Runs every 6 hours (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit Dashboard
+        run: |
+          curl -I https://trendlab-intel.streamlit.app/
