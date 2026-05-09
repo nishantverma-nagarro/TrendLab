@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   scout_and_sync:
@@ -39,13 +40,34 @@ jobs:
           GEMINI_MODEL: "models/gemini-flash-latest"
         run: python tracker.py
 
-      - name: Sync Intelligence Data
+      - name: Sync via Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Use the built-in token
         run: |
           git config --global user.name "Nishant Kumar Verma"
           git config --global user.email "nkverma88015@gmail.com"
           
-          # Use -f to force add the file even if it is in .gitignore
-          git add -f data/trends.csv
+          # 1. Create a unique branch name
+          BRANCH_NAME="intel-update-$(date +'%Y-%m-%d-%H%M')"
+          git checkout -b $BRANCH_NAME
 
-          # This line checks if there are actual changes to prevent "Empty Commit" errors
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Intelligence Update: $(date +'%Y-%m-%d')" && git push)
+          # 2. Add and commit the data
+          git add data/trends.csv
+          
+          # Check for changes to avoid errors
+          if git diff --staged --quiet; then
+            echo "No changes detected. Skipping PR."
+            exit 0
+          fi
+          
+          git commit -m "Intelligence Update: $(date +'%Y-%m-%d')"
+          
+          # 3. Push the new branch
+          git push origin $BRANCH_NAME
+
+          # 4. Create the PR using the GitHub CLI
+          gh pr create \
+            --title "🚀 TrendLab: New Intelligence Data ($(date +'%Y-%m-%d'))" \
+            --body "Trend Scout has identified new signals. Please review and merge to update the dashboard." \
+            --base main \
+            --head $BRANCH_NAME
