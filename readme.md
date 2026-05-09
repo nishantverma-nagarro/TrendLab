@@ -13,9 +13,8 @@ TrendLab is an automated intelligence asset designed to solve the "Noise-to-Sign
 The pipeline is architected for **high availability and zero operational cost**, utilizing a version-controlled flat-file system for data persistence.
 
 ```mermaid
-graph TD
+graph LR
     %% Global Styles
-    %% Using a sleek, neutral palette: Deep Blue, Slate, and Ghost White
     classDef default fill:#f9f9fb,stroke:#2c3e50,stroke-width:1.5px,color:#2c3e50,font-family:Inter,Arial;
     classDef subgraphStyle fill:#ffffff,stroke:#bdc3c7,stroke-width:1px,stroke-dasharray: 5 5,color:#7f8c8d,font-size:13px;
     classDef highlight fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px,color:#1a73e8,font-weight:bold;
@@ -23,8 +22,8 @@ graph TD
 
     %% --- 1. DATA INGESTION ---
     subgraph Ingestion ["1. INGESTION & SEARCH"]
-        A[GitHub Action] --- B[Targeted Scout]
-        B --- C(Tavily Search API)
+        A[GitHub Action] --> B[Targeted Scout]
+        B --> C(Tavily Search API)
     end
 
     %% --- 2. INTELLIGENCE ---
