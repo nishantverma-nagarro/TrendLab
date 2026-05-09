@@ -18,8 +18,19 @@ def load_data():
 
 df = load_data()
 
+# --- PRE-HEADER LOGIC ---
+# Define unique_domains early so the title/caption can use it
+if not df.empty:
+    unique_domains = sorted(df['domain'].unique())
+    total_domains = len(unique_domains)
+else:
+    unique_domains = []
+    total_domains = 0
+
 # --- HEADER SECTION ---
-st.title("🛡️ TrendLab: Defense & Tech Intelligence")
+st.title("🛰️ TrendLab: Autonomous Intelligence & R&D Sentinel")
+total_domains = len(unique_domains)
+st.caption(f"🟢 **Autonomous Sentinel Active** | Monitoring **{total_domains}** High-Stakes Domains | OSINT Analysis via Gemini")
 
 # --- METHODOLOGY EXPANDER ---
 with st.expander("ℹ️ Understanding Intelligence Scores & Methodology"):
@@ -45,10 +56,10 @@ with st.expander("ℹ️ Understanding Intelligence Scores & Methodology"):
     * **🟡 Neutral (Steady/Stable):** Incremental improvements, maintenance-mode discussions, or balanced pros/cons. Low volatility.
     * **🔴 Bearish (Caution/Pivot):** Negative security reports, funding cuts, or technological dead-ends. Signals a need to pivot or wait.
 
-    #### 🎯 Strategic Zones
-    * **The Alpha Zone:** (Low Hype + Bullish Sentiment). This is the **"Smart Money"** zone where trends are scientifically sound but haven't been picked up by mainstream media yet.
-    * **The Peak Zone:** (High Hype + Bullish Sentiment). Validated success, but high entry cost.
-    * **The Warning Zone:** (High Hype + Bearish Sentiment). High noise covering up fundamental flaws or declining interest.
+    #### 🎯 Interpreting  Hype and Sentiment
+    * **Low Hype + Bullish Sentiment:** This is the **"Smart Money"** zone where trends are scientifically sound but haven't been picked up by mainstream media yet.
+    * **High Hype + Bullish Sentiment:** Validated success, but high entry cost.
+    * **High Hype + Bearish Sentiment:** High noise covering up fundamental flaws or declining interest.
     """)
 
 if df.empty:
@@ -106,29 +117,60 @@ else:
 
     st.markdown("---")
     
-    # --- 3. DOMAIN FEED (Newest First) ---
-    st.markdown(f"### 🔍 {selected_domain} Intelligence Feed")
-    
-    # Use iloc[::-1] to reverse for newest-first display
-    for _, row in domain_data.iloc[::-1].iterrows():
-        hype_icon = "🔥" if row['hype_score'] >= 7.5 else "❄️"
-        sentiment = row['sentiment']
-        color, dot = ("green", "🟢") if sentiment == "Bullish" else ("red", "🔴") if sentiment == "Bearish" else ("orange", "🟡")
+    # --- 3. DOMAIN FEED (Grouped by Date with Pagination) ---
+st.markdown(f"### 🔍 {selected_domain} Intelligence Feed")
 
-        title_string = f"**{hype_icon} {dot} | {row['topic']}**"
+if domain_data.empty:
+    st.info(f"📡 System is currently scouting for new signals in **{selected_domain}**.")
+else:
+    # 1. Group by Date and Sort (Newest Date First)
+    # We strip the time to ensure grouping by day
+    domain_data['date_only'] = domain_data['date'].dt.date
+    unique_dates = sorted(domain_data['date_only'].unique(), reverse=True)
+
+    # 2. Pagination Logic using Session State
+    if 'days_to_show' not in st.session_state:
+        st.session_state.days_to_show = 3  # Initial load: 3 days
+
+    # 3. Iterate through the visible dates
+    visible_dates = unique_dates[:st.session_state.days_to_show]
+
+    for current_date in visible_dates:
+        # Visual Date Header
+        display_date = "Today" if current_date == pd.Timestamp.now().date() else \
+                       "Yesterday" if current_date == (pd.Timestamp.now().date() - pd.Timedelta(days=1)) else \
+                       current_date.strftime("%B %d, %Y")
         
-        with st.expander(title_string, expanded=False):
-            c1, c2 = st.columns([3, 1])
-            with c1:
-                st.write(f"**Summary:** {row['summary']}")
-                st.info(f"**Narrative:** {row['narrative']}")
-                # Clean keyword formatting
-                signal_line = "  •  ".join([f"`{kw.upper()}`" for kw in row['keywords']])
-                st.markdown(f"**Signals:** {signal_line}")
-            with c2:
-                st.metric("Trend Hype", f"{hype_icon} {row['hype_score']}/10")
-                st.markdown(f"**Sentiment:** {dot} :{color}[{sentiment}]")
-                st.markdown(f"🔗 [Source Material]({row['link']})")
+        st.subheader(f"📅 {display_date}")
+        
+        day_signals = domain_data[domain_data['date_only'] == current_date]
+        
+        for _, row in day_signals.iloc[::-1].iterrows():
+            hype_icon = "🔥" if row['hype_score'] >= 7.5 else "❄️"
+            sentiment = row['sentiment']
+            color, dot = ("green", "🟢") if sentiment == "Bullish" else ("red", "🔴") if sentiment == "Bearish" else ("orange", "🟡")
+            
+            title_string = f"{hype_icon} {dot} | {row['topic']}"
+            
+            with st.expander(title_string):
+                c1, c2 = st.columns([3, 1])
+                with c1:
+                    st.write(f"**Summary:** {row['summary']}")
+                    st.info(f"**Narrative:** {row['narrative']}")
+                    signal_line = "  •  ".join([f"`{kw.upper()}`" for kw in row['keywords']])
+                    st.markdown(f"**Signals:** {signal_line}")
+                with c2:
+                    st.metric("Trend Hype", f"{row['hype_score']}/10")
+                    st.markdown(f"**Sentiment:** {dot} :{color}[{sentiment}]")
+                    st.markdown(f"🔗 [Source Material]({row['link']})")
+
+    # 4. Load More Button
+    if len(unique_dates) > st.session_state.days_to_show:
+        if st.button("📥 Load Next 3 Days"):
+            st.session_state.days_to_show += 3
+            st.rerun() # Refresh the app to show more dates
+    else:
+        st.caption("✨ You've reached the end of the historical intelligence feed.")
 
     # --- 4. INTELLIGENCE CLUSTERS ---
     st.markdown("---")
@@ -139,3 +181,18 @@ else:
         unique_kw = sorted(list(set(domain_keywords)))
         kw_cloud = " ".join([f"`{k.upper()}`" for k in unique_kw])
         st.markdown(kw_cloud)
+
+st.markdown("---")
+footer_col1, footer_col2 = st.columns([3, 1])
+
+with footer_col1:
+    st.markdown("""
+    **Archivist Note:** This system utilizes autonomous agents to scout, analyze, and quantify technical vectors. 
+    The entire pipeline—from data ingestion to NLI scoring—is architected using **Generative AI**.
+    """)
+
+with footer_col2:
+    st.markdown(
+        "[![LinkedIn](https://img.shields.io/badge/Connect-LinkedIn-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/nishant-verma-88915998/) "
+        "[![GitHub](https://img.shields.io/badge/View-GitHub-181717?style=flat&logo=github)](https://github.com/nishantverma-nagarro/TrendLab)"
+    )

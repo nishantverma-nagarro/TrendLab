@@ -18,10 +18,10 @@
         ]
     },
     "research_targets": {
-        "Software Engineering": "architecture OR repo OR benchmark",
-        "Cybersecurity": "exploit OR PoC OR 'zero-day'",
-        "Maritime AI": "GIS OR sensor OR vessel",
-        "Deep Space Tech": "orbital OR propulsion OR telemetry",
-        "BioTech": "CRISPR OR sequencing OR 'clinical trial'"
+        "AI & LLM Frontier": "'open-source' OR 'agentic' OR 'fine-tuning' OR 'context window'",
+        "The AI Bubble (Infra)": "'compute cost' OR 'GPU' OR 'energy' OR 'HBM' OR 'valuation'",
+        "Cybersecurity": "exploit OR PoC OR 'zero-day' OR 'ransomware' OR 'threat actor'",
+        "Consumer Tech": "wearable OR 'vision pro' OR 'smart home' OR 'handheld'",
+        "FinTech & Web3": "L2 OR 'stablecoin' OR 'DeFi' OR 'CBDC' OR 'compliance'"
     }
 }
