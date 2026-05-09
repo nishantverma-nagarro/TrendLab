@@ -29,6 +29,7 @@ graph TD
         F --> G[(trends.csv)]
         G --> H[Streamlit Dashboard]
     end
+```
 
 ### 🛠️ Key Technical Features
 
