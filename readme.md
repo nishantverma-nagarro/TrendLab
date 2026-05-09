@@ -13,31 +13,34 @@ TrendLab is an automated intelligence asset designed to solve the "Noise-to-Sign
 The pipeline is architected for **high availability and zero operational cost**, utilizing a version-controlled flat-file system for data persistence.
 
 ```mermaid
-graph LR
+graph TD
     %% Global Styles
     classDef default fill:#f9f9fb,stroke:#2c3e50,stroke-width:1.5px,color:#2c3e50,font-family:Inter,Arial;
     classDef subgraphStyle fill:#ffffff,stroke:#bdc3c7,stroke-width:1px,stroke-dasharray: 5 5,color:#7f8c8d,font-size:13px;
     classDef highlight fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px,color:#1a73e8,font-weight:bold;
     classDef storage fill:#f1f3f4,stroke:#5f6368,stroke-width:2px;
 
-    %% --- 1. DATA INGESTION ---
+    %% --- TIER 1: INGESTION ---
     subgraph Ingestion ["1. INGESTION & SEARCH"]
-        A[GitHub Action] --> B[Targeted Scout]
-        B --> C(Tavily Search API)
+        direction LR
+        A[GitHub Action] --> B[Targeted Scout] --> C(Tavily Search API)
     end
 
-    %% --- 2. INTELLIGENCE ---
+    %% --- TIER 2: INTELLIGENCE ---
     subgraph Intel ["2. INTELLIGENCE & SAFETY"]
-        C --> D{Model Switcher}
-        D -- "NLI Logic" --> E
-        E[Inference Tier: Gemini Flash/Pro] --> F[Content Safety Filter]
+        direction LR
+        D{Model Switcher} -- "NLI Logic" --> E[Inference Tier: Gemini Flash/Pro] --> F[Content Safety Filter]
     end
 
-    %% --- 3. DEPLOYMENT ---
+    %% --- TIER 3: DEPLOYMENT ---
     subgraph Deployment ["3. DEPLOYMENT"]
-        F --> G[(trends.csv)]
-        G --> H[Streamlit Dashboard]
+        direction LR
+        G[(trends.csv)] --> H[Streamlit Dashboard]
     end
+
+    %% Vertical Connections between tiers
+    C --> D
+    F --> G
 
     %% Apply Classes
     class Ingestion,Intel,Deployment subgraphStyle;
