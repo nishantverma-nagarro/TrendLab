@@ -4,9 +4,16 @@ import json
 
 st.set_page_config(page_title="TrendLab | Intelligence Dashboard", layout="wide")
 
+def load_config():
+    with open('config.json', 'r') as f:
+        return json.load(f)
+
 def load_data():
     try:
         df = pd.read_csv('data/trends.csv')
+        # Remove the rows where domain is not part of research_targets to ensure data integrity
+        config = load_config()
+        df = df[df['domain'].isin(config.get('research_targets', []))]
         # Ensure date is datetime for accurate plotting
         df['date'] = pd.to_datetime(df['date'])
         # Ensure keywords are treated as lists, not strings
