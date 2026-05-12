@@ -15,7 +15,7 @@ def load_data():
         config = load_config()
         df = df[df['domain'].isin(config.get('research_targets', []))]
         # Ensure date is datetime for accurate plotting
-        df['date'] = pd.to_datetime(df['date'])
+        df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d', errors='coerce')
         # Ensure keywords are treated as lists, not strings
         df['keywords'] = df['keywords'].apply(lambda x: eval(x) if isinstance(x, str) else x)
         return df
