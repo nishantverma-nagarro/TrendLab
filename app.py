@@ -182,8 +182,27 @@ else:
     # --- 4. INTELLIGENCE CLUSTERS ---
     st.markdown("---")
     st.subheader(f"📡 {selected_domain} Intelligence Clusters")
-    
-    domain_keywords = [kw for sublist in domain_data['keywords'] for kw in sublist]
+
+    # Limit clusters to keywords from the currently visible feed rows (pagination)
+    visible_domain = domain_data[domain_data['date_only'].isin(visible_dates)]
+
+    # Flatten keywords safely (handle missing or non-list entries)
+    domain_keywords = []
+    if not visible_domain.empty:
+        for sublist in visible_domain['keywords'].dropna():
+            if isinstance(sublist, list):
+                domain_keywords.extend(sublist)
+            else:
+                # fallback: if somehow a string slipped through, try to evaluate or add as single
+                try:
+                    parsed = eval(sublist) if isinstance(sublist, str) else [sublist]
+                    if isinstance(parsed, list):
+                        domain_keywords.extend(parsed)
+                    else:
+                        domain_keywords.append(parsed)
+                except Exception:
+                    continue
+
     if domain_keywords:
         unique_kw = sorted(list(set(domain_keywords)))
         kw_cloud = " ".join([f"`{k.upper()}`" for k in unique_kw])
